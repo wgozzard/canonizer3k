@@ -1,26 +1,363 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* globals.css */
+
+/* Custom property definitions for an 80's neon vibe */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 0, 0, 0;
+  --neon-blue: #00f3ff;
+  --neon-orange: #ff6b1a;
+  --glow-intensity: 0.8;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Global styles */
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding: 2rem 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Title styles */
+.app-title {
+  @apply text-6xl md:text-7xl font-press-start text-center mb-12;
+  background: linear-gradient(180deg, #ff6b1a 0%, #ff8f4f 50%, #ff6b1a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 2px #ff6b1a) 
+         drop-shadow(0 0 10px rgba(255, 107, 26, 0.8))
+         drop-shadow(0 0 20px rgba(255, 107, 26, 0.4));
+  letter-spacing: 1px;
+  animation: title-flicker 3s infinite alternate;
+}
+
+@keyframes title-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 0.98;
+    filter: drop-shadow(0 0 2px #ff6b1a) 
+           drop-shadow(0 0 10px rgba(255, 107, 26, 0.8))
+           drop-shadow(0 0 20px rgba(255, 107, 26, 0.4));
+  }
+  20%, 24%, 55% {
+    opacity: 0.8;
+    filter: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Form styles for textarea */
+textarea {
+  @apply bg-black/30 rounded-lg p-4 font-orbitron text-foreground 
+         placeholder:text-gray-500 w-full resize-none outline-none;
+  min-height: 100px;
+  border: 2px solid var(--neon-blue);
+  box-shadow: 
+    0 0 5px var(--neon-blue),
+    inset 0 0 10px rgba(0, 243, 255, 0.3);
+}
+
+textarea:focus {
+  border-color: var(--neon-blue);
+  box-shadow: 
+    0 0 10px var(--neon-blue),
+    0 0 20px rgba(0, 243, 255, 0.3),
+    inset 0 0 15px rgba(0, 243, 255, 0.4);
+}
+
+/* Retro button styles */
+.retro-button {
+  @apply px-8 py-3 font-press-start text-sm uppercase tracking-wider
+         relative transition-all duration-300
+         disabled:opacity-50 disabled:cursor-not-allowed;
+  background: #000;
+  border: 3px solid var(--neon-orange);
+  color: var(--neon-orange);
+  box-shadow: 
+    0 0 5px var(--neon-orange),
+    inset 0 0 5px rgba(255, 107, 26, 0.5);
+  margin: 1rem 0.5rem;
+  position: relative;
+  border-radius: 4px;
+}
+
+.retro-button:hover:not(:disabled) {
+  background: rgba(255, 107, 26, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 10px var(--neon-orange),
+    0 0 15px rgba(255, 107, 26, 0.5),
+    inset 0 0 10px rgba(255, 107, 26, 0.4);
+}
+
+.retro-button-accent {
+  border-color: var(--neon-blue);
+  color: var(--neon-blue);
+  box-shadow: 
+    0 0 5px var(--neon-blue),
+    inset 0 0 5px rgba(0, 243, 255, 0.5);
+}
+
+.retro-button-accent:hover:not(:disabled) {
+  background: rgba(0, 243, 255, 0.1);
+  box-shadow: 
+    0 0 10px var(--neon-blue),
+    0 0 15px rgba(0, 243, 255, 0.5),
+    inset 0 0 10px rgba(0, 243, 255, 0.4);
+}
+
+/* Button container */
+.button-container {
+  @apply flex justify-center gap-6 my-8;
+}
+
+/* VHS style container */
+.vhs-container {
+  @apply bg-black/90 p-8 relative rounded-lg mt-8;
+  border: 3px solid var(--neon-orange);
+  box-shadow: 
+    0 0 10px var(--neon-orange),
+    inset 0 0 20px rgba(0, 0, 0, 0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.vhs-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 107, 26, 0.5), 
+    transparent
+  );
+  animation: scan-line 8s linear infinite;
+}
+
+@keyframes scan-line {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(2000px);
+  }
+}
+
+.vhs-label {
+  @apply mb-8 pb-4 border-b-2 border-orange-500/30;
+  position: relative;
+}
+
+.vhs-label::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--neon-orange), 
+    transparent
+  );
+}
+
+.vhs-label-content {
+  @apply text-center;
+}
+
+/* Title styles for movie output */
+.neon-text {
+  @apply text-4xl md:text-5xl font-orbitron mb-4 text-center;
+  color: var(--neon-orange);
+  text-shadow: 
+    0 0 7px var(--neon-orange),
+    0 0 14px var(--neon-orange);
+}
+
+.movie-tagline {
+  @apply text-xl font-orbitron mb-6;
+  color: var(--neon-blue);
+  opacity: 0.9;
+  text-shadow: 0 0 5px var(--neon-blue);
+  font-style: italic;
+}
+
+.movie-content {
+  @apply space-y-8;
+  font-family: 'Courier Prime', monospace;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.movie-section {
+  @apply mb-8 relative;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  padding: 1rem;
+  border-left: 2px solid rgba(255, 107, 26, 0.3);
+}
+
+.section-header {
+  @apply mb-3 pb-2 border-b border-orange-500/20;
+}
+
+.movie-section-title {
+  @apply text-lg font-orbitron;
+  color: var(--neon-orange);
+  text-shadow: 0 0 5px var(--neon-orange);
+  letter-spacing: 1px;
+}
+
+.movie-text {
+  @apply text-white opacity-90;
+  font-family: 'Courier Prime', monospace;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.movie-section:nth-child(2) .movie-text {
+  line-height: 1.8;
+  letter-spacing: 0.2px;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+/* Trivia list styling */
+.trivia-list {
+  @apply space-y-4;
+}
+
+.trivia-item {
+  @apply flex items-start;
+  line-height: 1.5;
+}
+
+.trivia-bullet {
+  @apply mr-2 text-orange-500;
+  font-size: 0.8rem;
+}
+
+/* Credits styling */
+.movie-credits {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6 mt-8;
+}
+
+.credits-section {
+  @apply mb-0;
+}
+
+.cast-list {
+  @apply flex flex-wrap gap-2;
+}
+
+.cast-member {
+  @apply bg-orange-900/30 px-3 py-1 rounded;
+  border: 1px solid rgba(255, 107, 26, 0.3);
+}
+
+.director {
+  @apply font-bold text-orange-300;
+}
+
+/* Loading animations */
+.loading-bar {
+  width: 100%;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--neon-orange);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  margin: 20px auto;
+  max-width: 300px;
+}
+
+.loading-progress {
+  height: 100%;
+  background: linear-gradient(90deg, 
+    var(--neon-orange) 0%, 
+    var(--neon-blue) 50%, 
+    var(--neon-orange) 100%
+  );
+  width: 30%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: loading-animation 2s infinite linear;
+  box-shadow: 0 0 15px rgba(255, 107, 26, 0.7);
+}
+
+@keyframes loading-animation {
+  0% {
+    left: -30%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.text-neon-orange {
+  color: var(--neon-orange);
+  text-shadow: 0 0 5px var(--neon-orange);
+}
+
+/* VHS Loader styles */
+.vhs-loader-bar {
+  width: 80%;
+  height: 14px;
+  background: linear-gradient(90deg, #222 60%, #444 100%);
+  border-radius: 8px;
+  margin: 0 auto;
+  box-shadow: 0 0 8px #00f3ff88, 0 0 1px #fff;
+  overflow: hidden;
+  border: 2px solid var(--neon-blue);
+}
+
+.vhs-loader-progress {
+  height: 100%;
+  width: 40%;
+  background: repeating-linear-gradient(135deg, #ff6b1a 0 10px, #ff8f4f 10px 20px);
+  border-radius: 8px;
+  box-shadow: 0 0 18px #ff6b1a88, 0 0 1px #fff;
+  animation: vhs-rewind 1.2s cubic-bezier(.5,0,.5,1) infinite alternate;
+}
+
+@keyframes vhs-rewind {
+  0% { transform: translateX(-120%); opacity: 0.7; }
+  60% { opacity: 1; }
+  100% { transform: translateX(200%); opacity: 0.5; }
+}
+
+.animate-flicker {
+  animation: title-flicker 2s infinite alternate;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+  
+  .app-title {
+    @apply text-3xl mb-8;
+  }
+  
+  .vhs-container {
+    @apply p-4;
+  }
+  
+  .button-container {
+    @apply flex-col items-center gap-2;
+  }
+  
+  .retro-button {
+    @apply w-full max-w-xs;
+  }
 }
